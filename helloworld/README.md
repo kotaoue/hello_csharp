@@ -2,15 +2,12 @@
 
 A simple Hello World program in C#.
 
-## Build
+## Build & Run
 
 ```sh
+cd helloworld
 dotnet build
-```
-
-## Run
-
-```sh
 dotnet run
+
 Hello, World!
 ```
