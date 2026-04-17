@@ -6,7 +6,6 @@ A simple Hello World program in C#.
 
 ```sh
 cd helloworld
-dotnet build
 dotnet run
 
 Hello, World!
