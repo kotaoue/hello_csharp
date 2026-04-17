@@ -18,5 +18,8 @@ class Program
         Console.WriteLine(new string('-', 64));
         Console.WriteLine($"Current time(UTC): {DateTime.UtcNow}");
         Console.WriteLine($"Current time(Local): {DateTime.Now}");
+
+        Console.WriteLine(new string('-', 64));
+        Console.WriteLine("Thank you for using this program!");
     }
 }
