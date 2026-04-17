@@ -2,10 +2,6 @@
 
 A simple Hello World program in C#.
 
-## Requirements
-
-- [.NET SDK](https://dotnet.microsoft.com/download)
-
 ## Build
 
 ```sh
