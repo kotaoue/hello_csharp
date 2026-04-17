@@ -14,5 +14,9 @@ class Program
         Random random = new Random();
         int computerChoice = random.Next(choices.Length);
         Console.WriteLine($"Computer chose: {choices[computerChoice]}");
+
+        Console.WriteLine(new string('-', 64));
+        Console.WriteLine($"Current time(UTC): {DateTime.UtcNow}");
+        Console.WriteLine($"Current time(Local): {DateTime.Now}");
     }
 }
