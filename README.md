@@ -1,4 +1,4 @@
-# helllo_csharp
+# hello_csharp
 
 This is HelloWorld#.
 
@@ -6,9 +6,16 @@ This is HelloWorld#.
 
 - [.NET SDK](https://dotnet.microsoft.com/download)
 
-## Buildコマンド
+## Build Commands
 
-- dotnet run = build して run
-- dotnet test = テスト実施
-- dotnet build = コンパイルだけ
-- dotnet publish = アプリケーション作成
+- dotnet run = Build and run
+- dotnet test = Run tests
+- dotnet build = Compile only
+- dotnet publish = Create application artifacts
+
+## Sample List
+
+| Directory | Description |
+| --- | --- |
+| `helloworld/` | Hello World — Minimal C# setup |
+| `hello_aspnet/` | Hello World — Web app built with ASP.NET Core |
