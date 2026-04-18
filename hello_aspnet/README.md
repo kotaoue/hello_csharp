@@ -17,6 +17,7 @@ If the build succeeds, check:
 
 - [GET /](http://localhost:5000/) returns Hello, World!
 - [GET /greet/{name}](http://localhost:5000/greet/Alice) returns Hello, {name}!
+- [GET /add/{a:int}/{b:int}](http://localhost:5000/add/2/3) returns {a} + {b} = {a + b} (example: 2 + 3 = 5)
 
 ## Stop
 
