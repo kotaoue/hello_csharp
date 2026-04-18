@@ -6,16 +6,16 @@ This is HelloWorld#.
 
 - [.NET SDK](https://dotnet.microsoft.com/download)
 
-## Buildコマンド
+## Build Commands
 
-- dotnet run = build して run
-- dotnet test = テスト実施
-- dotnet build = コンパイルだけ
-- dotnet publish = アプリケーション作成
+- dotnet run = Build and run
+- dotnet test = Run tests
+- dotnet build = Compile only
+- dotnet publish = Create application artifacts
 
-## サンプル一覧
+## Sample List
 
-| ディレクトリ | 内容 |
+| Directory | Description |
 | --- | --- |
-| `helloworld/` | Hello World — C# の最小構成 |
-| `aspnetcore/` | Hello World — ASP.NET Core を使った Web アプリ |
+| `helloworld/` | Hello World — Minimal C# setup |
+| `aspnetcore/` | Hello World — Web app built with ASP.NET Core |
