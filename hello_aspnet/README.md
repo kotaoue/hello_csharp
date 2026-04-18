@@ -13,12 +13,18 @@ cd hello_aspnet
 dotnet run
 ```
 
-Once the server starts, open your browser or use `curl`:
+If the build succeeds, check <http://localhost:5000/>.
+
+## Endpoints
+
+- `GET /` returns `Hello, World!`
+- `GET /greet/{name}` returns `Hello, {name}!`
+
+You can test with curl:
 
 ```sh
 curl http://localhost:5000/
-
-Hello, World!
+curl http://localhost:5000/greet/Alice
 ```
 
 ## Stop
