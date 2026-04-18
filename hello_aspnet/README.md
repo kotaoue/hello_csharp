@@ -13,19 +13,10 @@ cd hello_aspnet
 dotnet run
 ```
 
-If the build succeeds, check <http://localhost:5000/>.
+If the build succeeds, check:
 
-## Endpoints
-
-- `GET /` returns `Hello, World!`
-- `GET /greet/{name}` returns `Hello, {name}!`
-
-You can test with curl:
-
-```sh
-curl http://localhost:5000/
-curl http://localhost:5000/greet/Alice
-```
+- [`GET /`](http://localhost:5000/) returns `Hello, World!`
+- [`GET /greet/{name}`](http://localhost:5000/greet/Alice) returns `Hello, {name}!` (example: `name = Alice`)
 
 ## Stop
 
