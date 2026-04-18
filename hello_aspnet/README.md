@@ -9,7 +9,7 @@ A simple Hello World web application using ASP.NET Core.
 ## Build & Run
 
 ```sh
-cd aspnetcore
+cd hello_aspnet
 dotnet run
 ```
 

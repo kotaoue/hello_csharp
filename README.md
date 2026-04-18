@@ -18,4 +18,4 @@ This is HelloWorld#.
 | Directory | Description |
 | --- | --- |
 | `helloworld/` | Hello World — Minimal C# setup |
-| `aspnetcore/` | Hello World — Web app built with ASP.NET Core |
+| `hello_aspnet/` | Hello World — Web app built with ASP.NET Core |
