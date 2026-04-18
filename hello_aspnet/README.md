@@ -15,8 +15,8 @@ dotnet run
 
 If the build succeeds, check:
 
-- [`GET /`](http://localhost:5000/) returns `Hello, World!`
-- [`GET /greet/{name}`](http://localhost:5000/greet/Alice) returns `Hello, {name}!` (example: `name = Alice`)
+- [GET /](http://localhost:5000/) returns Hello, World!
+- [GET /greet/{name}](http://localhost:5000/greet/Alice) returns Hello, {name}!
 
 ## Stop
 
