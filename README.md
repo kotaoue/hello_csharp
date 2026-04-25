@@ -19,3 +19,4 @@ This is HelloWorld#.
 | --- | --- |
 | `helloworld/` | Hello World — Minimal C# setup |
 | `hello_aspnet/` | Hello World — Web app built with ASP.NET Core |
+| `hello_maui/` | Hello World — Cross-platform GUI app built with .NET MAUI |
