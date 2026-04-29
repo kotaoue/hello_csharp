@@ -38,13 +38,34 @@ dotnet build -f net10.0-android
 dotnet run -f net10.0-android
 ```
 
-> **Note:** `$JAVA_HOME` に Homebrew の `openjdk@17` が設定されている場合、`jvm` が見つからないという警告が出ることがある。
+> **Note (Java SDK 警告):** `$JAVA_HOME` に Homebrew の `openjdk@17` が設定されている場合、`jvm` が見つからないという警告が出ることがある。
 > ビルド自体は成功するが、解消するには `temurin` などのフル JDK をインストールして `JAVA_HOME` を切り替える。
 >
 > ```sh
 > brew install --cask temurin@17
 > export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home
 > ```
+
+> **Note (`dotnet run` 実行時):** `dotnet run` には起動済みの Android エミュレーターまたは接続済みの実機が必要。
+> `emulator` コマンドが見つからない場合は PATH を追加してから AVD を起動する。
+>
+> ```sh
+> # PATH の追加（~/.zshrc に書いておくと永続化できる）
+> export PATH="$PATH:$HOME/Library/Android/sdk/emulator"
+> export PATH="$PATH:$HOME/Library/Android/sdk/platform-tools"
+>
+> # 利用可能な AVD を確認
+> emulator -list-avds
+>
+> # エミュレーターを起動（AVD 名は上のコマンドで確認）
+> emulator -avd <AVD_NAME> &
+> emulator -avd Medium_Phone_API_35 &
+>
+> # 起動完了後に実行
+> dotnet run -f net10.0-android
+> ```
+>
+> AVD がまだ作成されていない場合は Android Studio の **Virtual Device Manager** で作成する。
 
 ### iOS (macOS only)
 
