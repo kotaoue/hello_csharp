@@ -4,11 +4,11 @@ A simple Hello World web application using ASP.NET Core.
 
 ## Features
 
-* **ASP.NET Core Minimal API** — Lightweight HTTP endpoints with minimal boilerplate
-* **Cross-platform** — Runs on Linux, macOS, and Windows via .NET
-* **Routing** — Supports parameterised routes (e.g. `/greet/{name}`, `/add/{a}/{b}`)
-* **Dynamic HTML** — Generates HTML responses at runtime using C# string interpolation
-* **Input validation** — Validates colour values before rendering to prevent unexpected output
+- **ASP.NET Core Minimal API** — Lightweight HTTP endpoints with minimal boilerplate
+- **Cross-platform** — Runs on Linux, macOS, and Windows via .NET
+- **Routing** — Supports parameterised routes (e.g. `/greet/{name}`, `/add/{a}/{b}`)
+- **Dynamic HTML** — Generates HTML responses at runtime using C# string interpolation
+- **Input validation** — Validates colour values before rendering to prevent unexpected output
 
 ## Requirements
 
