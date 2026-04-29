@@ -38,6 +38,14 @@ dotnet build -f net10.0-android
 dotnet run -f net10.0-android
 ```
 
+> **Note:** `$JAVA_HOME` に Homebrew の `openjdk@17` が設定されている場合、`jvm` が見つからないという警告が出ることがある。
+> ビルド自体は成功するが、解消するには `temurin` などのフル JDK をインストールして `JAVA_HOME` を切り替える。
+>
+> ```sh
+> brew install --cask temurin@17
+> export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home
+> ```
+
 ### iOS (macOS only)
 
 ```sh
