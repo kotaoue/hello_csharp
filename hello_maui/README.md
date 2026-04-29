@@ -4,10 +4,10 @@ A simple Hello World application using .NET MAUI (Multi-platform App UI).
 
 ## Features
 
-* **.NET MAUI** — Cross-platform native UI framework for Android, iOS, macOS, and Windows
-* **XAML UI** — Declarative UI layout using XAML markup
-* **C# code-behind** — Event-driven logic in C#
-* **Cross-platform** — Single codebase targets Android, iOS, macOS, and Windows
+- **.NET MAUI** — Cross-platform native UI framework for Android, iOS, macOS, and Windows
+- **XAML UI** — Declarative UI layout using XAML markup
+- **C# code-behind** — Event-driven logic in C#
+- **Cross-platform** — Single codebase targets Android, iOS, macOS, and Windows
 
 ## Requirements
 
@@ -20,6 +20,13 @@ A simple Hello World application using .NET MAUI (Multi-platform App UI).
 | iOS | `dotnet workload install maui-ios` + Xcode (macOS only) |
 | macOS | `dotnet workload install maui-maccatalyst` + Xcode |
 | Windows | `dotnet workload install maui-windows` (Windows only) |
+
+```sh
+sudo dotnet workload install maui-android
+sudo dotnet workload install maui-ios
+sudo dotnet workload install maui-maccatalyst
+sudo dotnet workload install maui-windows
+```
 
 ## Build & Run
 
