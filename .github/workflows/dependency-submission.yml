@@ -1,0 +1,27 @@
+name: Dependency Submission (NuGet)
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  submit-nuget:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Install .NET MAUI workload
+        run: dotnet workload install maui-android
+
+      - name: Submit NuGet dependencies
+        uses: advanced-security/nuget-dependency-submission-action@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
