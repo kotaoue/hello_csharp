@@ -2,6 +2,8 @@ namespace HelloMaui;
 
 public partial class MainPage : ContentPage
 {
+    private const string TimestampFormat = "yyyy-MM-dd HH:mm:ss";
+
     public MainPage()
     {
         InitializeComponent();
@@ -9,6 +11,11 @@ public partial class MainPage : ContentPage
 
     private void OnShowTimeClicked(object sender, EventArgs e)
     {
-        TimestampLabel.Text = $"UTC:   {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}\nLocal: {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
+        var utcNow = DateTime.UtcNow;
+        var localNow = DateTime.Now;
+
+        TimestampLabel.Text =
+            $"UTC:   {utcNow.ToString(TimestampFormat)}{Environment.NewLine}" +
+            $"Local: {localNow.ToString(TimestampFormat)}";
     }
 }
