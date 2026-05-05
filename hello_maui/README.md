@@ -25,16 +25,3 @@ cd hello_maui
 dotnet build -f net10.0-maccatalyst
 dotnet run -f net10.0-maccatalyst
 ```
-
-> **Note (Xcode バージョン不一致):** インストール済みの .NET MacCatalyst ワークロードパックが古い場合、ビルド時に以下のようなエラーが発生することがある。
->
-> ```text
-> error This version of .NET for MacCatalyst (x.x.xxxxx) requires Xcode x.x.
-> The current version of Xcode is x.x.x.
-> ```
->
-> この場合はワークロードを最新化することで解消できる。
->
-> ```sh
-> sudo dotnet workload update
-> ```
