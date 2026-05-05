@@ -6,5 +6,10 @@ words:
   - aspnet
   - aspnetcore
   - skyblue
+  - appxmanifest
+  - maccatalyst
+  - appiconfg
+  - appicon
+  - maui
 ignoreWords: []
 import: []
