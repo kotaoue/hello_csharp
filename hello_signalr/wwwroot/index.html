@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hello SignalR</title>
+  <style>
+    body { font-family: sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; }
+    ul { list-style: none; padding-left: 0; }
+    li { padding: .4rem .6rem; margin-bottom: .4rem; background: #f4f6f8; border-radius: .4rem; }
+    .row { display: flex; gap: .5rem; margin-bottom: .75rem; }
+    input { flex: 1; padding: .5rem; }
+    button { padding: .5rem .8rem; }
+  </style>
+</head>
+<body>
+  <h1>Hello, SignalR!</h1>
+  <p>Open this page in multiple tabs and send messages in real time.</p>
+
+  <div class="row">
+    <input id="userInput" type="text" placeholder="Your name" value="guest" />
+    <input id="messageInput" type="text" placeholder="Message" />
+    <button id="sendButton">Send</button>
+  </div>
+
+  <ul id="messagesList"></ul>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js" integrity="sha512-KhUIPVBfKsQ4LEqfA0Mvg1zRtA8QQA45+8R29a3fNQ5xyE9f13v8R6j2xMldupS5quqlhc8otQfRebEJYQ6+rQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    const connection = new signalR.HubConnectionBuilder().withUrl('/chatHub').build();
+
+    connection.on('ReceiveMessage', (user, message) => {
+      const li = document.createElement('li');
+      li.textContent = `${user}: ${message}`;
+      document.getElementById('messagesList').appendChild(li);
+    });
+
+    document.getElementById('sendButton').addEventListener('click', async () => {
+      const user = document.getElementById('userInput').value || 'guest';
+      const message = document.getElementById('messageInput').value;
+      if (!message.trim()) {
+        return;
+      }
+      await connection.invoke('SendMessage', user, message);
+      document.getElementById('messageInput').value = '';
+      document.getElementById('messageInput').focus();
+    });
+
+    document.getElementById('messageInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        document.getElementById('sendButton').click();
+      }
+    });
+
+    connection.start();
+  </script>
+</body>
+</html>
