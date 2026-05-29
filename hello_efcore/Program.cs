@@ -17,7 +17,14 @@ if (!await db.Messages.AnyAsync())
     await db.SaveChangesAsync();
 }
 
-db.Messages.Add(new GreetingMessage { Text = $"Random value: {Random.Shared.Next(100000, 1000000)}", CreatedAtUtc = DateTime.UtcNow });
+var randomValue = Random.Shared.Next(100000, 1000000);
+var payload = $"{DateTime.UtcNow:O}-{Random.Shared.NextInt64()}";
+var shortSha256 = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(payload)))[..16];
+
+db.Messages.AddRange(
+    new GreetingMessage { Text = $"Random value: {randomValue}", CreatedAtUtc = DateTime.UtcNow },
+    new GreetingMessage { Text = $"SHA-256: {shortSha256}", CreatedAtUtc = DateTime.UtcNow }
+);
 await db.SaveChangesAsync();
 
 var messages = await db.Messages
