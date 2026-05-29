@@ -27,17 +27,9 @@ SELECT * FROM Messages;
 .exit
 ```
 
-### Run again
-
-```bash
-dotnet run
-```
-
-The sample inserts seed data only when the table is empty.
-
 ### Reset and recreate the local database
 
 ```bash
-rm hello_efcore.db
+rm -f hello_efcore.db
 dotnet run
 ```
