@@ -17,6 +17,9 @@ if (!await db.Messages.AnyAsync())
     await db.SaveChangesAsync();
 }
 
+db.Messages.Add(new GreetingMessage { Text = $"Random value: {Random.Shared.Next(100000, 1000000)}", CreatedAtUtc = DateTime.UtcNow });
+await db.SaveChangesAsync();
+
 var messages = await db.Messages
     .OrderBy(x => x.Id)
     .ToListAsync();
