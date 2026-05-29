@@ -43,4 +43,5 @@ sealed class GreetingMessage
     public int Id { get; set; }
     public required string Text { get; set; }
     public DateTime CreatedAtUtc { get; set; }
+    public int TodayYmdSum => DateTime.Today.Year + DateTime.Today.Month + DateTime.Today.Day;
 }
