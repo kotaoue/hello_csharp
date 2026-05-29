@@ -11,7 +11,8 @@ if (!await db.Messages.AnyAsync())
     db.Messages.AddRange(
         new GreetingMessage { Text = "Welcome to EF Core", CreatedAtUtc = DateTime.UtcNow },
         new GreetingMessage { Text = "SQLite local database is ready", CreatedAtUtc = DateTime.UtcNow },
-        new GreetingMessage { Text = $"{DateTime.Today.Year + DateTime.Today.Month + DateTime.Today.Day}", CreatedAtUtc = DateTime.UtcNow }
+        new GreetingMessage { Text = $"{DateTime.Today.Year + DateTime.Today.Month + DateTime.Today.Day}", CreatedAtUtc = DateTime.UtcNow },
+        new GreetingMessage { Text = $"Daily code {DateTime.Today:yyyyMMdd}: {(DateTime.Today.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday ? "Weekend" : "Weekday")} #{(DateTime.Today.Year + DateTime.Today.Month * DateTime.Today.Day) % 97:D2}", CreatedAtUtc = DateTime.UtcNow }
     );
     await db.SaveChangesAsync();
 }
