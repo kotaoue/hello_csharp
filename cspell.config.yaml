@@ -3,13 +3,14 @@ ignorePaths: []
 dictionaryDefinitions: []
 dictionaries: []
 words:
+  - appicon
+  - appiconfg
+  - appxmanifest
   - aspnet
   - aspnetcore
-  - skyblue
-  - appxmanifest
+  - efcore
   - maccatalyst
-  - appiconfg
-  - appicon
   - maui
+  - skyblue
 ignoreWords: []
 import: []
