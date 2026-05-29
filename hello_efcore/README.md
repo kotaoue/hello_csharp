@@ -30,6 +30,5 @@ SELECT * FROM Messages;
 ### Reset and recreate the local database
 
 ```bash
-rm -f hello_efcore.db
-dotnet run
+rm -f hello_efcore.db; dotnet run
 ```
