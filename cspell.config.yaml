@@ -11,6 +11,7 @@ words:
   - efcore
   - maccatalyst
   - maui
+  - signalr
   - skyblue
 ignoreWords: []
 import: []
