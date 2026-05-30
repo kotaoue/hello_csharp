@@ -1,0 +1,47 @@
+using Microsoft.ML;
+using Microsoft.ML.Data;
+
+var mlContext = new MLContext(seed: 1);
+
+var samples = new[]
+{
+    new SentimentData { Text = "I love ML.NET", Label = true },
+    new SentimentData { Text = "This is amazing", Label = true },
+    new SentimentData { Text = "I hate bugs", Label = false },
+    new SentimentData { Text = "This is terrible", Label = false }
+};
+
+var trainingData = mlContext.Data.LoadFromEnumerable(samples);
+
+var pipeline = mlContext.Transforms.Text.FeaturizeText(
+        outputColumnName: "Features",
+        inputColumnName: nameof(SentimentData.Text))
+    .Append(mlContext.BinaryClassification.Trainers.SdcaLogisticRegression(
+        labelColumnName: nameof(SentimentData.Label),
+        featureColumnName: "Features"));
+
+var model = pipeline.Fit(trainingData);
+var predictionEngine = mlContext.Model.CreatePredictionEngine<SentimentData, SentimentPrediction>(model);
+
+var testInput = new SentimentData { Text = "ML.NET is awesome" };
+var prediction = predictionEngine.Predict(testInput);
+
+Console.WriteLine("Hello, ML.NET!");
+Console.WriteLine($"Input: {testInput.Text}");
+Console.WriteLine($"Prediction: {(prediction.Prediction ? "Positive" : "Negative")}");
+Console.WriteLine($"Probability: {prediction.Probability:F3}");
+
+public sealed class SentimentData
+{
+    public string Text { get; set; } = string.Empty;
+
+    public bool Label { get; set; }
+}
+
+public sealed class SentimentPrediction
+{
+    [ColumnName("PredictedLabel")]
+    public bool Prediction { get; set; }
+
+    public float Probability { get; set; }
+}

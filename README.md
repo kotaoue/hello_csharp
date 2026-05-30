@@ -19,6 +19,7 @@ This is HelloWorld#.
 | --- | --- |
 | hello_aspnet | Hello World — Web app built with ASP.NET Core |
 | hello_efcore | Hello World — Data access sample built with Entity Framework Core |
+| hello_mlnet | Hello World — Machine learning sample built with ML.NET |
 | hello_maui | Hello World — Cross-platform GUI app built with .NET MAUI |
 | hello_signalr | Hello World — Real-time web app built with ASP.NET Core SignalR |
 | helloworld | Hello World — Minimal C# setup |
