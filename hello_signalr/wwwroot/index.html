@@ -8,6 +8,7 @@
     body { font-family: sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; }
     ul { list-style: none; padding-left: 0; }
     li { padding: .4rem .6rem; margin-bottom: .4rem; background: #f4f6f8; border-radius: .4rem; }
+    .user-name { font-weight: 700; }
     .row { display: flex; gap: .5rem; margin-bottom: .75rem; }
     input { flex: 1; padding: .5rem; }
     button { padding: .5rem .8rem; }
@@ -18,7 +19,10 @@
   <p>Open this page in multiple tabs and send messages in real time.</p>
 
   <div class="row">
-    <input id="userInput" type="text" placeholder="Your name" value="guest" />
+    <input id="userInput" type="text" placeholder="Your name" value="guest" list="userOptions" />
+    <datalist id="userOptions">
+      <option value="guest"></option>
+    </datalist>
     <input id="messageInput" type="text" placeholder="Message" />
     <button id="sendButton">Send</button>
   </div>
@@ -27,24 +31,107 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js" integrity="sha512-7SRCYIJtR6F8ocwW7UxW6wGKqbSyqREDbfCORCbGLatU0iugBLwyOXpzhkPyHIFdBO0K2VCu57fvP2Twgx1o2A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
+    const USER_STORAGE_KEY = 'helloSignalRUsers';
     const connection = new signalR.HubConnectionBuilder().withUrl('/chatHub').build();
     const sendButton = document.getElementById('sendButton');
+    const userInput = document.getElementById('userInput');
+    const userOptions = document.getElementById('userOptions');
+
+    function normalizeUserName(name) {
+      return (name || '').trim();
+    }
+
+    function getStoredUsers() {
+      try {
+        const raw = localStorage.getItem(USER_STORAGE_KEY);
+        const users = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(users)) {
+          return [];
+        }
+        return users
+          .map(normalizeUserName)
+          .filter((name) => name.length > 0);
+      } catch {
+        return [];
+      }
+    }
+
+    function saveStoredUsers(users) {
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(users));
+    }
+
+    function userNameToNumber(name) {
+      const normalized = normalizeUserName(name).toLowerCase();
+      let hash = 0;
+      for (let i = 0; i < normalized.length; i += 1) {
+        hash = ((hash * 31) + normalized.charCodeAt(i)) >>> 0;
+      }
+      return hash;
+    }
+
+    function numberToReadableRgb(value) {
+      const baseR = (value >>> 16) & 255;
+      const baseG = (value >>> 8) & 255;
+      const baseB = value & 255;
+
+      // Keep text color vivid but readable by lifting darker channels.
+      const r = Math.max(70, baseR);
+      const g = Math.max(70, baseG);
+      const b = Math.max(70, baseB);
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    function userNameToColor(name) {
+      return numberToReadableRgb(userNameToNumber(name));
+    }
+
+    function addUserOption(name) {
+      const normalized = normalizeUserName(name);
+      if (!normalized) {
+        return;
+      }
+
+      const existing = Array.from(userOptions.options).map((option) => option.value);
+      if (existing.includes(normalized)) {
+        return;
+      }
+
+      const option = document.createElement('option');
+      option.value = normalized;
+      userOptions.appendChild(option);
+
+      const merged = Array.from(new Set(['guest', ...getStoredUsers(), normalized]));
+      saveStoredUsers(merged);
+    }
+
+    getStoredUsers().forEach((name) => addUserOption(name));
 
     sendButton.disabled = true;
 
     connection.on('ReceiveMessage', (user, message) => {
       const li = document.createElement('li');
-      li.textContent = `${user}: ${message}`;
+      const userSpan = document.createElement('span');
+      userSpan.className = 'user-name';
+      userSpan.textContent = `${user}: `;
+      userSpan.style.color = userNameToColor(user);
+
+      const messageSpan = document.createElement('span');
+      messageSpan.textContent = message;
+
+      li.appendChild(userSpan);
+      li.appendChild(messageSpan);
       document.getElementById('messagesList').appendChild(li);
     });
 
     sendButton.addEventListener('click', async () => {
-      const user = document.getElementById('userInput').value || 'guest';
+      const user = normalizeUserName(userInput.value) || 'guest';
       const message = document.getElementById('messageInput').value;
       if (!message.trim()) {
         return;
       }
       try {
+        addUserOption(user);
+        userInput.value = user;
         await connection.invoke('SendMessage', user, message);
         document.getElementById('messageInput').value = '';
         document.getElementById('messageInput').focus();
