@@ -19,6 +19,7 @@ This is HelloWorld#.
 | --- | --- |
 | hello_akka | Hello World — Actor-based concurrent app built with Akka.NET |
 | hello_aspnet | Hello World — Web app built with ASP.NET Core |
+| hello_avalonia | Hello World — Cross-platform desktop app built with Avalonia UI |
 | hello_blazor/ | Hello World — Web app built with Blazor |
 | hello_efcore | Hello World — Data access sample built with Entity Framework Core |
 | hello_maui | Hello World — Cross-platform GUI app built with .NET MAUI |
