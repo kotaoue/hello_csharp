@@ -25,9 +25,12 @@
 
   <ul id="messagesList"></ul>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js" integrity="sha512-KhUIPVBfKsQ4LEqfA0Mvg1zRtA8QQA45+8R29a3fNQ5xyE9f13v8R6j2xMldupS5quqlhc8otQfRebEJYQ6+rQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js" integrity="sha512-7SRCYIJtR6F8ocwW7UxW6wGKqbSyqREDbfCORCbGLatU0iugBLwyOXpzhkPyHIFdBO0K2VCu57fvP2Twgx1o2A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
     const connection = new signalR.HubConnectionBuilder().withUrl('/chatHub').build();
+    const sendButton = document.getElementById('sendButton');
+
+    sendButton.disabled = true;
 
     connection.on('ReceiveMessage', (user, message) => {
       const li = document.createElement('li');
@@ -35,15 +38,19 @@
       document.getElementById('messagesList').appendChild(li);
     });
 
-    document.getElementById('sendButton').addEventListener('click', async () => {
+    sendButton.addEventListener('click', async () => {
       const user = document.getElementById('userInput').value || 'guest';
       const message = document.getElementById('messageInput').value;
       if (!message.trim()) {
         return;
       }
-      await connection.invoke('SendMessage', user, message);
-      document.getElementById('messageInput').value = '';
-      document.getElementById('messageInput').focus();
+      try {
+        await connection.invoke('SendMessage', user, message);
+        document.getElementById('messageInput').value = '';
+        document.getElementById('messageInput').focus();
+      } catch (err) {
+        console.error('Failed to send message', err);
+      }
     });
 
     document.getElementById('messageInput').addEventListener('keydown', (e) => {
@@ -52,7 +59,13 @@
       }
     });
 
-    connection.start();
+    connection.start()
+      .then(() => {
+        sendButton.disabled = false;
+      })
+      .catch((err) => {
+        console.error('Failed to connect to SignalR hub', err);
+      });
   </script>
 </body>
 </html>
