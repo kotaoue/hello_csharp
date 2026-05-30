@@ -19,7 +19,7 @@ cd hello_signalr
 dotnet run
 ```
 
-Then open [http://localhost:5000](http://localhost:5000) in two or more browser tabs and send messages.
+Then open [http://localhost:5265](http://localhost:5265) in two or more browser tabs and send messages.
 
 ## Stop
 
