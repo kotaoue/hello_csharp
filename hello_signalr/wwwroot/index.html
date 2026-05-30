@@ -1,19 +1,51 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Hello SignalR</title>
   <style>
-    body { font-family: sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; }
-    ul { list-style: none; padding-left: 0; }
-    li { padding: .4rem .6rem; margin-bottom: .4rem; background: #f4f6f8; border-radius: .4rem; }
-    .user-name { font-weight: 700; }
-    .row { display: flex; gap: .5rem; margin-bottom: .75rem; }
-    input { flex: 1; padding: .5rem; }
-    button { padding: .5rem .8rem; }
+    body {
+      font-family: sans-serif;
+      max-width: 720px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    li {
+      padding: .4rem .6rem;
+      margin-bottom: .4rem;
+      background: #f4f6f8;
+      border-radius: .4rem;
+    }
+
+    .user-name {
+      font-weight: 700;
+    }
+
+    .row {
+      display: flex;
+      gap: .5rem;
+      margin-bottom: .75rem;
+    }
+
+    input {
+      flex: 1;
+      padding: .5rem;
+    }
+
+    button {
+      padding: .5rem .8rem;
+    }
   </style>
 </head>
+
 <body>
   <h1>Hello, SignalR!</h1>
   <p>Open this page in multiple tabs and send messages in real time.</p>
@@ -29,7 +61,9 @@
 
   <ul id="messagesList"></ul>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js" integrity="sha512-7SRCYIJtR6F8ocwW7UxW6wGKqbSyqREDbfCORCbGLatU0iugBLwyOXpzhkPyHIFdBO0K2VCu57fvP2Twgx1o2A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"
+    integrity="sha512-7SRCYIJtR6F8ocwW7UxW6wGKqbSyqREDbfCORCbGLatU0iugBLwyOXpzhkPyHIFdBO0K2VCu57fvP2Twgx1o2A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script>
     const USER_STORAGE_KEY = 'helloSignalRUsers';
     const connection = new signalR.HubConnectionBuilder().withUrl('/chatHub').build();
@@ -155,4 +189,5 @@
       });
   </script>
 </body>
+
 </html>

@@ -24,3 +24,7 @@ Then open [http://localhost:5265](http://localhost:5265) in two or more browser 
 ## Stop
 
 Press `Ctrl+C` in the terminal to stop the server.
+
+## Screenshot
+
+![Hello SignalR screen](docs/screenshot.png)
