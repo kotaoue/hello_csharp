@@ -1,0 +1,27 @@
+@page "/today"
+
+<PageTitle>今日の日付</PageTitle>
+
+<h1>今日の日付</h1>
+
+<p class="date-card">@TodayText</p>
+
+<p>
+    <a href="/">ホームに戻る</a>
+</p>
+
+<style>
+    .date-card {
+        background: #f4f6f8;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        font-size: 1.2rem;
+        font-weight: 700;
+        max-width: 24rem;
+    }
+</style>
+
+@code {
+    private string TodayText => DateTime.Now.ToString("yyyy年M月d日 (dddd)",
+        System.Globalization.CultureInfo.GetCultureInfo("ja-JP"));
+}
