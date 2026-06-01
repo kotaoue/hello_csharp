@@ -1,0 +1,37 @@
+<section class="date-card">
+    @if (!string.IsNullOrWhiteSpace(Title))
+    {
+        <h2>@Title</h2>
+    }
+
+    <p>@TodayText</p>
+</section>
+
+<style>
+    .date-card {
+        background: #f4f6f8;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        max-width: 24rem;
+    }
+
+    .date-card h2 {
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .date-card p {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 700;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public string? Title { get; set; }
+
+    private string TodayText => DateTime.Now.ToString("yyyy年M月d日 (dddd)",
+        System.Globalization.CultureInfo.GetCultureInfo("ja-JP"));
+}
