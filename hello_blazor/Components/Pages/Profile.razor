@@ -1,0 +1,106 @@
+@page "/profile"
+@rendermode InteractiveServer
+@using System.ComponentModel.DataAnnotations
+
+<PageTitle>プロフィール入力</PageTitle>
+
+<h1>プロフィール入力</h1>
+
+<p>Blazor のフォームバリデーションを試せるサンプルです。</p>
+
+<EditForm Model="profile" OnValidSubmit="HandleValidSubmit" class="profile-form">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-row">
+        <label for="name">名前</label>
+        <InputText id="name" @bind-Value="profile.Name" />
+        <ValidationMessage For="@(() => profile.Name)" />
+    </div>
+
+    <div class="form-row">
+        <label for="email">メールアドレス</label>
+        <InputText id="email" @bind-Value="profile.Email" />
+        <ValidationMessage For="@(() => profile.Email)" />
+    </div>
+
+    <div class="form-row">
+        <label for="birthday">誕生日</label>
+        <InputDate id="birthday" @bind-Value="profile.Birthday" />
+        <ValidationMessage For="@(() => profile.Birthday)" />
+    </div>
+
+    <button type="submit">保存</button>
+</EditForm>
+
+@if (submittedProfile is not null)
+{
+    <section class="result-card">
+        <h2>保存した内容</h2>
+        <p>名前: @submittedProfile.Name</p>
+        <p>メールアドレス: @submittedProfile.Email</p>
+        <p>誕生日: @submittedProfile.Birthday?.ToString("yyyy年M月d日", System.Globalization.CultureInfo.GetCultureInfo("ja-JP"))</p>
+    </section>
+}
+
+<p>
+    <a href="/">ホームに戻る</a>
+</p>
+
+<style>
+    .profile-form {
+        max-width: 32rem;
+    }
+
+    .form-row {
+        display: grid;
+        gap: 0.4rem;
+        margin-bottom: 1rem;
+    }
+
+    .form-row input {
+        padding: 0.6rem;
+        font-size: 1rem;
+    }
+
+    .profile-form button {
+        padding: 0.6rem 1rem;
+    }
+
+    .result-card {
+        margin-top: 1.5rem;
+        background: #f4f6f8;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        max-width: 32rem;
+    }
+ </style>
+
+@code {
+    private ProfileInput profile = new();
+    private ProfileInput? submittedProfile;
+
+    private void HandleValidSubmit()
+    {
+        submittedProfile = new ProfileInput
+        {
+            Name = profile.Name,
+            Email = profile.Email,
+            Birthday = profile.Birthday,
+        };
+    }
+
+    private sealed class ProfileInput
+    {
+        [Required(ErrorMessage = "名前は必須です")]
+        [StringLength(30, MinimumLength = 2, ErrorMessage = "名前は2文字以上30文字以内で入力してください")]
+        public string Name { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "メールアドレスは必須です")]
+        [EmailAddress(ErrorMessage = "メールアドレスの形式で入力してください")]
+        public string Email { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "誕生日は必須です")]
+        public DateOnly? Birthday { get; set; }
+    }
+}

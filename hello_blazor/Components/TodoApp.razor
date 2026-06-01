@@ -1,0 +1,250 @@
+<section class="todo-app">
+    <div class="todo-entry">
+        <input @bind="newTaskTitle" @bind:event="oninput" @onkeydown="HandleNewTaskKeyDown" placeholder="やることを入力" />
+        <button @onclick="AddTask" disabled="@string.IsNullOrWhiteSpace(newTaskTitle)">追加</button>
+    </div>
+
+    <div class="todo-filters">
+        <button class="@(currentFilter == TodoFilter.All ? "active" : null)" @onclick='() => SetFilter(TodoFilter.All)'>すべて</button>
+        <button class="@(currentFilter == TodoFilter.Active ? "active" : null)" @onclick='() => SetFilter(TodoFilter.Active)'>未完了</button>
+        <button class="@(currentFilter == TodoFilter.Completed ? "active" : null)" @onclick='() => SetFilter(TodoFilter.Completed)'>完了</button>
+    </div>
+
+    @if (VisibleTasks.Count == 0)
+    {
+        <p>表示できるタスクはまだありません。</p>
+    }
+    else
+    {
+        <ul class="todo-list">
+            @foreach (var task in VisibleTasks)
+            {
+                <li class="todo-item">
+                    <input type="checkbox" checked="@task.IsCompleted" @onchange="() => ToggleCompleted(task.Id)" />
+
+                    @if (editingTaskId == task.Id)
+                    {
+                        <input class="todo-edit" @bind="editingTitle" @bind:event="oninput" @onkeydown="HandleEditKeyDown" />
+                        <button @onclick="SaveEdit">保存</button>
+                        <button @onclick="CancelEdit">キャンセル</button>
+                    }
+                    else
+                    {
+                        <span class="@(task.IsCompleted ? "completed" : null)">@task.Title</span>
+                        <button @onclick='() => StartEdit(task.Id)'>編集</button>
+                        <button @onclick='() => DeleteTask(task.Id)'>削除</button>
+                    }
+                </li>
+            }
+        </ul>
+    }
+</section>
+
+<style>
+    .todo-app {
+        max-width: 40rem;
+    }
+
+    .todo-entry {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .todo-entry input,
+    .todo-edit {
+        flex: 1;
+        padding: 0.6rem;
+        font-size: 1rem;
+    }
+
+    .todo-entry button,
+    .todo-item button,
+    .todo-filters button {
+        padding: 0.55rem 0.8rem;
+    }
+
+    .todo-filters {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .todo-filters .active {
+        font-weight: 700;
+        border: 2px solid #0b57d0;
+    }
+
+    .todo-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 0.75rem;
+    }
+
+    .todo-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #f4f6f8;
+        border-radius: 0.75rem;
+        padding: 0.75rem;
+    }
+
+    .todo-item span {
+        flex: 1;
+    }
+
+    .todo-item .completed {
+        text-decoration: line-through;
+        color: #666;
+    }
+</style>
+
+@code {
+    private readonly List<TodoItem> tasks =
+    [
+        new() { Id = 1, Title = "Blazor で Todo を作る" },
+        new() { Id = 2, Title = "完了ボタンを試す", IsCompleted = true },
+    ];
+
+    private string newTaskTitle = string.Empty;
+    private string editingTitle = string.Empty;
+    private int? editingTaskId;
+    private int nextId = 3;
+    private TodoFilter currentFilter = TodoFilter.All;
+
+    private List<TodoItem> VisibleTasks => tasks.Where(task => currentFilter switch
+    {
+        TodoFilter.Active => !task.IsCompleted,
+        TodoFilter.Completed => task.IsCompleted,
+        _ => true,
+    }).ToList();
+
+    private void AddTask()
+    {
+        var trimmedTitle = newTaskTitle.Trim();
+        if (string.IsNullOrWhiteSpace(trimmedTitle))
+        {
+            return;
+        }
+
+        tasks.Add(new TodoItem
+        {
+            Id = nextId++,
+            Title = trimmedTitle,
+        });
+
+        newTaskTitle = string.Empty;
+    }
+
+    private void ToggleCompleted(int id)
+    {
+        var task = tasks.FirstOrDefault(task => task.Id == id);
+        if (task is null)
+        {
+            return;
+        }
+
+        task.IsCompleted = !task.IsCompleted;
+    }
+
+    private void DeleteTask(int id)
+    {
+        var task = tasks.FirstOrDefault(task => task.Id == id);
+        if (task is null)
+        {
+            return;
+        }
+
+        tasks.Remove(task);
+
+        if (editingTaskId == id)
+        {
+            CancelEdit();
+        }
+    }
+
+    private void StartEdit(int id)
+    {
+        var task = tasks.FirstOrDefault(task => task.Id == id);
+        if (task is null)
+        {
+            return;
+        }
+
+        editingTaskId = id;
+        editingTitle = task.Title;
+    }
+
+    private void SaveEdit()
+    {
+        if (editingTaskId is null)
+        {
+            return;
+        }
+
+        var trimmedTitle = editingTitle.Trim();
+        if (string.IsNullOrWhiteSpace(trimmedTitle))
+        {
+            return;
+        }
+
+        var task = tasks.FirstOrDefault(task => task.Id == editingTaskId);
+        if (task is null)
+        {
+            return;
+        }
+
+        task.Title = trimmedTitle;
+        CancelEdit();
+    }
+
+    private void CancelEdit()
+    {
+        editingTaskId = null;
+        editingTitle = string.Empty;
+    }
+
+    private void SetFilter(TodoFilter filter)
+    {
+        currentFilter = filter;
+    }
+
+    private void HandleNewTaskKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter")
+        {
+            AddTask();
+        }
+    }
+
+    private void HandleEditKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter")
+        {
+            SaveEdit();
+        }
+        else if (args.Key == "Escape")
+        {
+            CancelEdit();
+        }
+    }
+
+    private enum TodoFilter
+    {
+        All,
+        Active,
+        Completed,
+    }
+
+    private sealed class TodoItem
+    {
+        public required int Id { get; init; }
+
+        public required string Title { get; set; }
+
+        public bool IsCompleted { get; set; }
+    }
+}

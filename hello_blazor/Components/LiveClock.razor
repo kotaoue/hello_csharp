@@ -1,0 +1,77 @@
+@implements IDisposable
+
+<section class="clock-card">
+    <h2>現在時刻</h2>
+    <p class="clock-time">@CurrentTimeText</p>
+
+    <h2>日付変更まで</h2>
+    <p class="clock-countdown">@CountdownText</p>
+</section>
+
+<style>
+    .clock-card {
+        background: #eef6ff;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        max-width: 24rem;
+    }
+
+    .clock-card h2 {
+        margin: 0 0 0.5rem;
+        font-size: 1rem;
+    }
+
+    .clock-time,
+    .clock-countdown {
+        margin: 0 0 1rem;
+        font-weight: 700;
+    }
+
+    .clock-countdown {
+        margin-bottom: 0;
+    }
+</style>
+
+@code {
+    private readonly PeriodicTimer timer = new(TimeSpan.FromSeconds(1));
+    private DateTime currentTime = DateTime.Now;
+    private CancellationTokenSource cancellationTokenSource = new();
+
+    private string CurrentTimeText => currentTime.ToString("HH時mm分ss秒");
+
+    private string CountdownText
+    {
+        get
+        {
+            var remaining = currentTime.Date.AddDays(1) - currentTime;
+            return $"{remaining.Hours:D2}時間 {remaining.Minutes:D2}分 {remaining.Seconds:D2}秒";
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        _ = RunClockAsync();
+    }
+
+    private async Task RunClockAsync()
+    {
+        try
+        {
+            while (await timer.WaitForNextTickAsync(cancellationTokenSource.Token))
+            {
+                currentTime = DateTime.Now;
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+        }
+    }
+
+    public void Dispose()
+    {
+        cancellationTokenSource.Cancel();
+        cancellationTokenSource.Dispose();
+        timer.Dispose();
+    }
+}
