@@ -1,10 +1,12 @@
 using Akka.Actor;
+using Akka.Routing;
 
 using var system = ActorSystem.Create("hello-akka");
 
 var printer = system.ActorOf(Props.Create<PrinterActor>(), "printer");
 var greeter = system.ActorOf(Props.Create(() => new GreeterActor(printer)), "greeter");
 var askGreeter = system.ActorOf(Props.Create<AskGreeterActor>(), "ask-greeter");
+var workerRouter = system.ActorOf(new RoundRobinPool(3).Props(Props.Create<WorkerActor>()), "worker-router");
 
 greeter.Tell(new Greet("World"));
 greeter.Tell(new Greet("Akka.NET"));
@@ -29,12 +31,18 @@ catch (AskTimeoutException)
     Console.WriteLine("Ask timeout (expected): slow actor did not respond within 200ms.");
 }
 
-await Task.Delay(100);
+for (var i = 1; i <= 10; i++)
+{
+    workerRouter.Tell(new Work(i));
+}
+
+await Task.Delay(300);
 await system.Terminate();
 
 record Greet(string Who);
 record SlowGreet(string Who);
 record Greeting(string Message);
+record Work(int Id);
 
 class GreeterActor : ReceiveActor
 {
@@ -62,5 +70,14 @@ class AskGreeterActor : ReceiveActor
             Thread.Sleep(1000);
             Sender.Tell(new Greeting($"Hello slowly, {msg.Who}!"));
         });
+    }
+}
+
+class WorkerActor : ReceiveActor
+{
+    public WorkerActor()
+    {
+        Receive<Work>(msg =>
+            Console.WriteLine($"Worker {Self.Path.Name} handled job #{msg.Id} on thread {Environment.CurrentManagedThreadId}"));
     }
 }
