@@ -4,9 +4,13 @@ using var system = ActorSystem.Create("hello-akka");
 
 var printer = system.ActorOf(Props.Create<PrinterActor>(), "printer");
 var greeter = system.ActorOf(Props.Create(() => new GreeterActor(printer)), "greeter");
+var askGreeter = system.ActorOf(Props.Create<AskGreeterActor>(), "ask-greeter");
 
 greeter.Tell(new Greet("World"));
 greeter.Tell(new Greet("Akka.NET"));
+
+var askReply = await askGreeter.Ask<Greeting>(new Greet("Ask Pattern"), TimeSpan.FromSeconds(1));
+Console.WriteLine($"Ask response: {askReply.Message}");
 
 await Task.Delay(100);
 await system.Terminate();
@@ -27,5 +31,13 @@ class PrinterActor : ReceiveActor
     public PrinterActor()
     {
         Receive<Greeting>(msg => Console.WriteLine(msg.Message));
+    }
+}
+
+class AskGreeterActor : ReceiveActor
+{
+    public AskGreeterActor()
+    {
+        Receive<Greet>(msg => Sender.Tell(new Greeting($"Hello, {msg.Who}!")));
     }
 }
