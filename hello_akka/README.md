@@ -22,7 +22,7 @@ dotnet run
 
 Expected output:
 
-```
+```text
 Hello, World!
 Hello, Akka.NET!
 ```
