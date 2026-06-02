@@ -8,7 +8,7 @@ var greeter = system.ActorOf(Props.Create(() => new GreeterActor(printer)), "gre
 greeter.Tell(new Greet("World"));
 greeter.Tell(new Greet("Akka.NET"));
 
-await Task.Delay(500);
+await Task.Delay(10000);
 await system.Terminate();
 
 record Greet(string Who);
