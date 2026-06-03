@@ -9,14 +9,39 @@ public partial class MainWindow : Window
 {
     public ObservableCollection<TodoItem> VisibleTodos { get; } = new();
 
+    private int _count;
     private readonly ObservableCollection<TodoItem> _allTodos = new();
 
     public MainWindow()
     {
         InitializeComponent();
         DataContext = this;
+        UpdateCountText();
         UpdateVisibleTodos();
         UpdateSummaryText();
+    }
+
+    private void OnIncrementClick(object? sender, RoutedEventArgs e)
+    {
+        _count++;
+        UpdateCountText();
+    }
+
+    private void OnDecrementClick(object? sender, RoutedEventArgs e)
+    {
+        _count--;
+        UpdateCountText();
+    }
+
+    private void OnResetClick(object? sender, RoutedEventArgs e)
+    {
+        _count = 0;
+        UpdateCountText();
+    }
+
+    private void UpdateCountText()
+    {
+        CountText.Text = $"Count: {_count}";
     }
 
     private void OnAddTodoClick(object? sender, RoutedEventArgs e)
