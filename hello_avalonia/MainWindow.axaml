@@ -1,45 +1,47 @@
 <Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="hello_avalonia.MainWindow"
-        Title="Avalonia Todo"
-        Width="560"
-        Height="420">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:hello_avalonia"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+    x:Class="hello_avalonia.MainWindow"
+    x:DataType="local:MainWindow"
+    Title="Avalonia Todo"
+    Width="560"
+    Height="420">
     <StackPanel Margin="20" Spacing="12">
         <TextBlock Text="Hello, Avalonia Todo!" FontSize="24" FontWeight="Bold" />
 
         <StackPanel Orientation="Horizontal" Spacing="8">
-            <TextBox x:Name="NewTodoTextBox" Width="360" Watermark="新しいタスクを入力" />
+            <TextBox x:Name="NewTodoTextBox" Width="360" PlaceholderText="新しいタスクを入力" />
             <Button Content="追加" Width="80" Click="OnAddTodoClick" />
         </StackPanel>
 
         <CheckBox x:Name="ShowOnlyActiveCheckBox"
-                  Content="未完了のみ表示"
-                  IsChecked="False"
-                  IsCheckedChanged="OnShowOnlyActiveChanged" />
+            Content="未完了のみ表示"
+            IsChecked="False"
+            IsCheckedChanged="OnShowOnlyActiveChanged" />
 
         <TextBlock x:Name="SummaryText"
-                   Text="合計: 0件 (未完了: 0件)"
-                   FontSize="14" />
+            Text="合計: 0件 (未完了: 0件)"
+            FontSize="14" />
 
         <ListBox ItemsSource="{Binding VisibleTodos}" Height="250">
             <ListBox.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="local:TodoItem">
                     <Grid ColumnDefinitions="Auto,*,Auto" Margin="0,2">
                         <CheckBox Grid.Column="0"
-                                  IsChecked="{Binding IsDone}"
-                                  VerticalAlignment="Center"
-                                  IsCheckedChanged="OnTodoDoneChanged" />
+                            IsChecked="{Binding IsDone}"
+                            VerticalAlignment="Center"
+                            IsCheckedChanged="OnTodoDoneChanged" />
                         <TextBlock Grid.Column="1"
-                                   Margin="8,0"
-                                   Text="{Binding Title}"
-                                   VerticalAlignment="Center" />
+                            Margin="8,0"
+                            Text="{Binding Title}"
+                            VerticalAlignment="Center" />
                         <Button Grid.Column="2"
-                                Content="削除"
-                                Width="64"
-                                Click="OnDeleteTodoClick" />
+                            Content="削除"
+                            Width="64"
+                            Click="OnDeleteTodoClick" />
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
