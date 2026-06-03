@@ -17,6 +17,7 @@ This is HelloWorld#.
 
 | Directory | Description |
 | --- | --- |
+| hello_akka | Hello World — Actor-based concurrent app built with Akka.NET |
 | hello_aspnet | Hello World — Web app built with ASP.NET Core |
 | hello_blazor/ | Hello World — Web app built with Blazor |
 | hello_efcore | Hello World — Data access sample built with Entity Framework Core |
