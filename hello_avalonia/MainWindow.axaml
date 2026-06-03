@@ -4,6 +4,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="hello_avalonia.MainWindow"
-        Title="hello_avalonia">
-    Hello, Avalonia!
+        Title="Avalonia Counter"
+        Width="480"
+        Height="320">
+    <StackPanel Margin="24" Spacing="16" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <TextBlock Text="Hello, Avalonia Counter!" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" />
+
+        <TextBlock x:Name="CountText"
+                   Text="Count: 0"
+                   FontSize="28"
+                   HorizontalAlignment="Center" />
+
+        <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
+            <Button Content="-1" Width="80" Click="OnDecrementClick" />
+            <Button Content="Reset" Width="100" Click="OnResetClick" />
+            <Button Content="+1" Width="80" Click="OnIncrementClick" />
+        </StackPanel>
+    </StackPanel>
 </Window>
