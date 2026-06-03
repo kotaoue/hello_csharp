@@ -8,6 +8,7 @@ var greeter = system.ActorOf(Props.Create(() => new GreeterActor(printer)), "gre
 var askGreeter = system.ActorOf(Props.Create<AskGreeterActor>(), "ask-greeter");
 var workerRouter = system.ActorOf(new RoundRobinPool(3).Props(Props.Create<WorkerActor>()), "worker-router");
 var supervisorDemo = system.ActorOf(Props.Create<SupervisorDemoActor>(), "supervisor-demo");
+var schedulerDemo = system.ActorOf(Props.Create<SchedulerDemoActor>(), "scheduler-demo");
 
 greeter.Tell(new Greet("World"));
 greeter.Tell(new Greet("Akka.NET"));
@@ -45,7 +46,9 @@ supervisorDemo.Tell(new PrintState("after resume"));
 supervisorDemo.Tell(new CrashRestart());
 supervisorDemo.Tell(new PrintState("after restart"));
 
-await Task.Delay(500);
+schedulerDemo.Tell(StartTicker.Instance);
+
+await Task.Delay(6000);
 await system.Terminate();
 
 record Greet(string Who);
@@ -56,6 +59,16 @@ record Increment;
 record PrintState(string Label);
 record CrashRestart;
 record CrashResume;
+sealed record StartTicker
+{
+    public static StartTicker Instance { get; } = new();
+    private StartTicker() { }
+}
+sealed record Tick
+{
+    public static Tick Instance { get; } = new();
+    private Tick() { }
+}
 
 class GreeterActor : ReceiveActor
 {
@@ -139,5 +152,43 @@ class CounterActor : ReceiveActor
     {
         Console.WriteLine($"Counter restart triggered by: {reason.GetType().Name}");
         base.PreRestart(reason, message);
+    }
+}
+
+class SchedulerDemoActor : ReceiveActor
+{
+    private int _ticks;
+    private ICancelable? _cancelable;
+
+    public SchedulerDemoActor()
+    {
+        Receive<StartTicker>(_ =>
+        {
+            _cancelable ??= Context.System.Scheduler.ScheduleTellRepeatedlyCancelable(
+                initialDelay: TimeSpan.Zero,
+                interval: TimeSpan.FromSeconds(1),
+                receiver: Self,
+                message: Tick.Instance,
+                sender: Self);
+        });
+
+        Receive<Tick>(_ =>
+        {
+            _ticks++;
+            Console.WriteLine($"Scheduler tick: {_ticks}");
+
+            if (_ticks >= 5)
+            {
+                _cancelable?.Cancel();
+                _cancelable = null;
+                Console.WriteLine("Scheduler finished after 5 ticks.");
+            }
+        });
+    }
+
+    protected override void PostStop()
+    {
+        _cancelable?.Cancel();
+        base.PostStop();
     }
 }
