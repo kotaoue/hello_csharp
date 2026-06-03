@@ -9,6 +9,7 @@ var askGreeter = system.ActorOf(Props.Create<AskGreeterActor>(), "ask-greeter");
 var workerRouter = system.ActorOf(new RoundRobinPool(3).Props(Props.Create<WorkerActor>()), "worker-router");
 var supervisorDemo = system.ActorOf(Props.Create<SupervisorDemoActor>(), "supervisor-demo");
 var schedulerDemo = system.ActorOf(Props.Create<SchedulerDemoActor>(), "scheduler-demo");
+var downloaderDemo = system.ActorOf(Props.Create<DownloaderActor>(), "downloader-demo");
 
 greeter.Tell(new Greet("World"));
 greeter.Tell(new Greet("Akka.NET"));
@@ -47,6 +48,8 @@ supervisorDemo.Tell(new CrashRestart());
 supervisorDemo.Tell(new PrintState("after restart"));
 
 schedulerDemo.Tell(StartTicker.Instance);
+downloaderDemo.Tell(new DownloadRequest("file-a.zip"));
+downloaderDemo.Tell(new DownloadRequest("file-b.zip"));
 
 await Task.Delay(6000);
 await system.Terminate();
@@ -68,6 +71,12 @@ sealed record Tick
 {
     public static Tick Instance { get; } = new();
     private Tick() { }
+}
+record DownloadRequest(string FileName);
+sealed record DownloadCompleted
+{
+    public static DownloadCompleted Instance { get; } = new();
+    private DownloadCompleted() { }
 }
 
 class GreeterActor : ReceiveActor
@@ -190,5 +199,46 @@ class SchedulerDemoActor : ReceiveActor
     {
         _cancelable?.Cancel();
         base.PostStop();
+    }
+}
+
+class DownloaderActor : ReceiveActor
+{
+    private string _currentFile = string.Empty;
+
+    public DownloaderActor()
+    {
+        Become(Idle);
+    }
+
+    private void Idle()
+    {
+        Receive<DownloadRequest>(msg =>
+        {
+            _currentFile = msg.FileName;
+            Console.WriteLine($"Downloader state: Idle -> Busy ({_currentFile})");
+
+            Context.System.Scheduler.ScheduleTellOnce(
+                delay: TimeSpan.FromMilliseconds(700),
+                receiver: Self,
+                message: DownloadCompleted.Instance,
+                sender: Self);
+
+            Become(Busy);
+        });
+    }
+
+    private void Busy()
+    {
+        Receive<DownloadRequest>(msg =>
+            Console.WriteLine($"Downloader is Busy({_currentFile}), skip: {msg.FileName}"));
+
+        Receive<DownloadCompleted>(_ =>
+        {
+            Console.WriteLine($"Download completed: {_currentFile}");
+            _currentFile = string.Empty;
+            Console.WriteLine("Downloader state: Busy -> Idle");
+            Become(Idle);
+        });
     }
 }
