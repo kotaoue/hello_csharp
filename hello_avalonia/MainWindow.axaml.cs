@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Styling;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -220,7 +221,7 @@ public partial class MainWindow : Window
         _settings.TodoInputText = NewTodoTextBox.Text ?? string.Empty;
         _settings.ShowOnlyActiveTodos = ShowOnlyActiveCheckBox.IsChecked == true;
         _settings.SelectedTabIndex = RootTabs.SelectedIndex;
-        _settings.Theme = Application.Current?.RequestedThemeVariant?.Key ?? ThemeVariant.Default.Key ?? "Default";
+        _settings.Theme = Application.Current?.RequestedThemeVariant?.Key?.ToString() ?? ThemeVariant.Default.Key?.ToString() ?? "Default";
         _settings.Todos = _allTodos.Select(todo => new TodoItemState
         {
             Title = todo.Title,
