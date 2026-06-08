@@ -4,6 +4,7 @@ using Avalonia.Interactivity;
 using Avalonia.Styling;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 
 namespace hello_avalonia;
 
@@ -13,15 +14,38 @@ public partial class MainWindow : Window
 
     private int _count;
     private readonly ObservableCollection<TodoItem> _allTodos = new();
+    private readonly AppSettings _settings;
 
-    public MainWindow()
+    public MainWindow(AppSettings settings)
     {
+        _settings = settings;
         InitializeComponent();
         DataContext = this;
+        Width = _settings.WindowWidth;
+        Height = _settings.WindowHeight;
+        RootTabs.SelectedIndex = Math.Max(0, _settings.SelectedTabIndex);
+        _count = _settings.CounterValue;
+        NewTodoTextBox.Text = _settings.TodoInputText;
+        ShowOnlyActiveCheckBox.IsChecked = _settings.ShowOnlyActiveTodos;
+
+        foreach (var todoState in _settings.Todos)
+        {
+            var todo = new TodoItem
+            {
+                Title = todoState.Title,
+                IsDone = todoState.IsDone
+            };
+            todo.PropertyChanged += OnTodoPropertyChanged;
+            _allTodos.Add(todo);
+        }
+
         UpdateCountText();
         UpdateVisibleTodos();
         UpdateSummaryText();
         UpdateThemeStatusText();
+        SaveSettings();
+
+        Closing += OnClosing;
     }
 
     private void OnLightThemeClick(object? sender, RoutedEventArgs e)
@@ -48,6 +72,7 @@ public partial class MainWindow : Window
 
         Application.Current.RequestedThemeVariant = variant;
         UpdateThemeStatusText();
+        SaveSettings();
     }
 
     private void UpdateThemeStatusText()
@@ -72,18 +97,21 @@ public partial class MainWindow : Window
     {
         _count++;
         UpdateCountText();
+        SaveSettings();
     }
 
     private void OnDecrementClick(object? sender, RoutedEventArgs e)
     {
         _count--;
         UpdateCountText();
+        SaveSettings();
     }
 
     private void OnResetClick(object? sender, RoutedEventArgs e)
     {
         _count = 0;
         UpdateCountText();
+        SaveSettings();
     }
 
     private void UpdateCountText()
@@ -107,6 +135,7 @@ public partial class MainWindow : Window
 
         UpdateVisibleTodos();
         UpdateSummaryText();
+        SaveSettings();
     }
 
     private void OnDeleteTodoClick(object? sender, RoutedEventArgs e)
@@ -120,17 +149,20 @@ public partial class MainWindow : Window
         _allTodos.Remove(todo);
         UpdateVisibleTodos();
         UpdateSummaryText();
+        SaveSettings();
     }
 
     private void OnTodoDoneChanged(object? sender, RoutedEventArgs e)
     {
         UpdateVisibleTodos();
         UpdateSummaryText();
+        SaveSettings();
     }
 
     private void OnShowOnlyActiveChanged(object? sender, RoutedEventArgs e)
     {
         UpdateVisibleTodos();
+        SaveSettings();
     }
 
     private void OnTodoPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -142,6 +174,7 @@ public partial class MainWindow : Window
 
         UpdateVisibleTodos();
         UpdateSummaryText();
+        SaveSettings();
     }
 
     private void UpdateVisibleTodos()
@@ -172,6 +205,29 @@ public partial class MainWindow : Window
         }
 
         SummaryText.Text = $"合計: {_allTodos.Count}件 (未完了: {remaining}件)";
+    }
+
+    private void OnClosing(object? sender, WindowClosingEventArgs e)
+    {
+        SaveSettings();
+    }
+
+    private void SaveSettings()
+    {
+        _settings.WindowWidth = Width;
+        _settings.WindowHeight = Height;
+        _settings.CounterValue = _count;
+        _settings.TodoInputText = NewTodoTextBox.Text ?? string.Empty;
+        _settings.ShowOnlyActiveTodos = ShowOnlyActiveCheckBox.IsChecked == true;
+        _settings.SelectedTabIndex = RootTabs.SelectedIndex;
+        _settings.Theme = Application.Current?.RequestedThemeVariant?.Key ?? ThemeVariant.Default.Key ?? "Default";
+        _settings.Todos = _allTodos.Select(todo => new TodoItemState
+        {
+            Title = todo.Title,
+            IsDone = todo.IsDone
+        }).ToList();
+
+        AppSettingsStore.Save(_settings);
     }
 }
 

@@ -9,15 +9,15 @@
     Title="Avalonia Todo"
     Width="560"
     Height="420">
-    <TabControl Margin="16">
+    <TabControl x:Name="RootTabs" Margin="16">
         <TabItem Header="1. カウンター">
             <StackPanel Margin="16" Spacing="16" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="Hello, Avalonia Counter!" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" />
 
                 <TextBlock x:Name="CountText"
-                           Text="Count: 0"
-                           FontSize="28"
-                           HorizontalAlignment="Center" />
+                    Text="Count: 0"
+                    FontSize="28"
+                    HorizontalAlignment="Center" />
 
                 <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
                     <Button Content="-1" Width="80" Click="OnDecrementClick" />
