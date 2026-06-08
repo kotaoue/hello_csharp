@@ -11,7 +11,7 @@ public sealed class AppSettings
 {
     public double WindowWidth { get; set; } = 560;
     public double WindowHeight { get; set; } = 420;
-    public string Theme { get; set; } = ThemeVariant.Default.Key ?? "Default";
+    public string Theme { get; set; } = ThemeVariant.Default.Key?.ToString() ?? "Default";
     public int CounterValue { get; set; }
     public string TodoInputText { get; set; } = string.Empty;
     public bool ShowOnlyActiveTodos { get; set; }
