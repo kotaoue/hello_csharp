@@ -88,6 +88,38 @@
                     </StackPanel>
                 </StackPanel>
             </TabItem>
+
+            <TabItem Header="4. 検索リスト">
+                <StackPanel Margin="16" Spacing="12">
+                    <TextBlock Text="Searchable List" FontSize="24" FontWeight="Bold" />
+
+                    <TextBox x:Name="SearchTextBox"
+                        Width="320"
+                        PlaceholderText="キーワードを入力"
+                        TextChanged="OnSearchTextChanged" />
+
+                    <TextBlock x:Name="SearchResultText"
+                        Text="0件表示中"
+                        FontSize="14" />
+
+                    <ListBox ItemsSource="{Binding VisibleSearchItems}" Height="220">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="local:SearchItem">
+                                <Grid ColumnDefinitions="*,Auto" Margin="0,4">
+                                    <StackPanel Grid.Column="0" Spacing="2">
+                                        <TextBlock Text="{Binding Title}" FontWeight="Bold" />
+                                        <TextBlock Text="{Binding Description}" FontSize="12" Opacity="0.75" />
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="1"
+                                        Text="{Binding Category}"
+                                        VerticalAlignment="Center"
+                                        Margin="12,0,0,0" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </TabItem>
         </TabControl>
     </DockPanel>
 </Window>

@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Styling;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -12,10 +13,13 @@ namespace hello_avalonia;
 public partial class MainWindow : Window
 {
     public ObservableCollection<TodoItem> VisibleTodos { get; } = new();
+    public ObservableCollection<SearchItem> VisibleSearchItems { get; } = new();
 
     private int _count;
     private readonly ObservableCollection<TodoItem> _allTodos = new();
+    private readonly List<SearchItem> _allSearchItems = new();
     private readonly AppSettings _settings;
+    private string _searchQuery = string.Empty;
 
     public MainWindow(AppSettings settings)
     {
@@ -28,6 +32,7 @@ public partial class MainWindow : Window
         _count = _settings.CounterValue;
         NewTodoTextBox.Text = _settings.TodoInputText;
         ShowOnlyActiveCheckBox.IsChecked = _settings.ShowOnlyActiveTodos;
+        BuildSearchItems();
 
         foreach (var todoState in _settings.Todos)
         {
@@ -43,6 +48,7 @@ public partial class MainWindow : Window
         UpdateCountText();
         UpdateVisibleTodos();
         UpdateSummaryText();
+        UpdateVisibleSearchItems();
         UpdateThemeStatusText();
         SaveSettings();
 
@@ -65,6 +71,13 @@ public partial class MainWindow : Window
     {
         var aboutWindow = new AboutWindow();
         await aboutWindow.ShowDialog(this);
+    }
+
+    private void OnSearchTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        _searchQuery = SearchTextBox.Text?.Trim() ?? string.Empty;
+        UpdateVisibleSearchItems();
+        SaveSettings();
     }
 
     private void OnLightThemeClick(object? sender, RoutedEventArgs e)
@@ -231,6 +244,50 @@ public partial class MainWindow : Window
         SaveSettings();
     }
 
+    private void BuildSearchItems()
+    {
+        _allSearchItems.Clear();
+
+        var categories = new[] { "Core", "UI", "Data", "Ops", "Support" };
+        var descriptions = new[]
+        {
+            "customer invoice sync",
+            "inventory reconciliation",
+            "theme preview entry",
+            "searchable list sample",
+            "window management note"
+        };
+
+        foreach (var index in Enumerable.Range(1, 1000))
+        {
+            _allSearchItems.Add(new SearchItem
+            {
+                Title = $"Item {index:0000}",
+                Category = categories[index % categories.Length],
+                Description = descriptions[index % descriptions.Length]
+            });
+        }
+    }
+
+    private void UpdateVisibleSearchItems()
+    {
+        VisibleSearchItems.Clear();
+
+        var filteredItems = string.IsNullOrWhiteSpace(_searchQuery)
+            ? _allSearchItems
+            : _allSearchItems.Where(item =>
+                item.Title.Contains(_searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                item.Category.Contains(_searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                item.Description.Contains(_searchQuery, StringComparison.OrdinalIgnoreCase));
+
+        foreach (var item in filteredItems)
+        {
+            VisibleSearchItems.Add(item);
+        }
+
+        SearchResultText.Text = $"{VisibleSearchItems.Count}件表示中";
+    }
+
     private void SaveSettings()
     {
         _settings.WindowWidth = Width;
@@ -272,4 +329,11 @@ public sealed class TodoItem : INotifyPropertyChanged
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
+}
+
+public sealed class SearchItem
+{
+    public string Title { get; init; } = string.Empty;
+    public string Category { get; init; } = string.Empty;
+    public string Description { get; init; } = string.Empty;
 }
