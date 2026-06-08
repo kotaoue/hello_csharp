@@ -49,6 +49,24 @@ public partial class MainWindow : Window
         Closing += OnClosing;
     }
 
+    public void RefreshThemeStatusText()
+    {
+        UpdateThemeStatusText();
+    }
+
+    private async void OnOpenSettingsClick(object? sender, RoutedEventArgs e)
+    {
+        var settingsWindow = new SettingsWindow(_settings, this);
+        await settingsWindow.ShowDialog(this);
+        UpdateThemeStatusText();
+    }
+
+    private async void OnOpenAboutClick(object? sender, RoutedEventArgs e)
+    {
+        var aboutWindow = new AboutWindow();
+        await aboutWindow.ShowDialog(this);
+    }
+
     private void OnLightThemeClick(object? sender, RoutedEventArgs e)
     {
         ApplyTheme(ThemeVariant.Light);
