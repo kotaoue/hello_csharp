@@ -67,5 +67,18 @@
                 </ListBox>
             </StackPanel>
         </TabItem>
+
+        <TabItem Header="3. テーマ">
+            <StackPanel Margin="16" Spacing="14" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="Theme Switcher" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" />
+                <TextBlock x:Name="ThemeStatusText" Text="現在: System" FontSize="16" HorizontalAlignment="Center" />
+
+                <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+                    <Button Content="Light" Width="90" Click="OnLightThemeClick" />
+                    <Button Content="Dark" Width="90" Click="OnDarkThemeClick" />
+                    <Button Content="System" Width="90" Click="OnSystemThemeClick" />
+                </StackPanel>
+            </StackPanel>
+        </TabItem>
     </TabControl>
 </Window>

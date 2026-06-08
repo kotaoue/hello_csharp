@@ -1,5 +1,7 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Styling;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
@@ -19,6 +21,51 @@ public partial class MainWindow : Window
         UpdateCountText();
         UpdateVisibleTodos();
         UpdateSummaryText();
+        UpdateThemeStatusText();
+    }
+
+    private void OnLightThemeClick(object? sender, RoutedEventArgs e)
+    {
+        ApplyTheme(ThemeVariant.Light);
+    }
+
+    private void OnDarkThemeClick(object? sender, RoutedEventArgs e)
+    {
+        ApplyTheme(ThemeVariant.Dark);
+    }
+
+    private void OnSystemThemeClick(object? sender, RoutedEventArgs e)
+    {
+        ApplyTheme(ThemeVariant.Default);
+    }
+
+    private void ApplyTheme(ThemeVariant variant)
+    {
+        if (Application.Current is null)
+        {
+            return;
+        }
+
+        Application.Current.RequestedThemeVariant = variant;
+        UpdateThemeStatusText();
+    }
+
+    private void UpdateThemeStatusText()
+    {
+        if (Application.Current is null)
+        {
+            ThemeStatusText.Text = "現在: Unknown";
+            return;
+        }
+
+        var label = Application.Current.RequestedThemeVariant switch
+        {
+            { Key: "Light" } => "Light",
+            { Key: "Dark" } => "Dark",
+            _ => "System"
+        };
+
+        ThemeStatusText.Text = $"現在: {label}";
     }
 
     private void OnIncrementClick(object? sender, RoutedEventArgs e)
