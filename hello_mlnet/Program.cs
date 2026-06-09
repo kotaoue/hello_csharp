@@ -25,14 +25,23 @@ var pipeline = mlContext.Transforms.Text.FeaturizeText(
 var model = pipeline.Fit(trainingData);
 var predictionEngine = mlContext.Model.CreatePredictionEngine<SentimentData, SentimentPrediction>(model);
 
-var testInput = new SentimentData { Text = "ML.NET is awesome" };
+var candidates = new[]
+{
+    (Category: "Positive", Data: new SentimentData { Text = "ML.NET is awesome" }),
+    (Category: "Negative", Data: new SentimentData { Text = "I regret using this" }),
+    (Category: "Neutral", Data: new SentimentData { Text = "ML.NET is a machine learning library" })
+};
+var selected = candidates[Random.Shared.Next(candidates.Length)];
+var testInput = selected.Data;
 var prediction = predictionEngine.Predict(testInput);
 
 Console.WriteLine("Hello, ML.NET!");
+Console.WriteLine($"Random category: {selected.Category}");
 Console.WriteLine($"Input: {testInput.Text}");
 Console.WriteLine($"Prediction: {(prediction.Prediction ? "Positive" : "Negative")}");
 Console.WriteLine($"Probability: {prediction.Probability:F3}");
 Console.WriteLine("Press any key to exit...");
+
 Console.ReadKey();
 Console.WriteLine("Read Key is" + Console.ReadKey());
 Console.WriteLine("Goodbye, ML.NET!");
