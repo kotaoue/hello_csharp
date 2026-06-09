@@ -36,6 +36,7 @@ var testInput = selected.Data;
 var prediction = predictionEngine.Predict(testInput);
 
 Console.WriteLine("Hello, ML.NET!");
+Console.WriteLine("--------");
 Console.WriteLine($"Random category: {selected.Category}");
 Console.WriteLine($"Input: {testInput.Text}");
 Console.WriteLine($"Prediction: {(prediction.Prediction ? "Positive" : "Negative")}");
