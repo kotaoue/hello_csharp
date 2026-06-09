@@ -32,6 +32,10 @@ Console.WriteLine("Hello, ML.NET!");
 Console.WriteLine($"Input: {testInput.Text}");
 Console.WriteLine($"Prediction: {(prediction.Prediction ? "Positive" : "Negative")}");
 Console.WriteLine($"Probability: {prediction.Probability:F3}");
+Console.WriteLine("Press any key to exit...");
+Console.ReadKey();
+Console.WriteLine("Read Key is" + Console.ReadKey());
+Console.WriteLine("Goodbye, ML.NET!");
 
 public sealed class SentimentData
 {
