@@ -8,7 +8,9 @@ var samples = new[]
     new SentimentData { Text = "I love ML.NET", Label = true },
     new SentimentData { Text = "This is amazing", Label = true },
     new SentimentData { Text = "I hate bugs", Label = false },
-    new SentimentData { Text = "This is terrible", Label = false }
+    new SentimentData { Text = "This is terrible", Label = false },
+    new SentimentData { Text = "ML.NET is fantastic", Label = true },
+    new SentimentData { Text = "I dislike this", Label = false }
 };
 
 var trainingData = mlContext.Data.LoadFromEnumerable(samples);
