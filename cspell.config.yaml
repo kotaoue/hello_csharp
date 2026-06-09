@@ -13,8 +13,10 @@ words:
   - avalonia
   - blazor
   - efcore
+  - featurization
   - maccatalyst
   - maui
+  - mlnet
   - signalr
   - skyblue
 ignoreWords: []
