@@ -18,11 +18,12 @@ This is HelloWorld#.
 | Directory | Description |
 | --- | --- |
 | hello_akka | Hello World — Actor-based concurrent app built with Akka.NET |
+| hello_aspire | Hello World — Cloud-native app host built with .NET Aspire |
 | hello_aspnet | Hello World — Web app built with ASP.NET Core |
 | hello_avalonia | Hello World — Cross-platform desktop app built with Avalonia UI |
 | hello_blazor/ | Hello World — Web app built with Blazor |
 | hello_efcore | Hello World — Data access sample built with Entity Framework Core |
-| hello_mlnet | Hello World — Machine learning sample built with ML.NET |
 | hello_maui | Hello World — Cross-platform GUI app built with .NET MAUI |
+| hello_mlnet | Hello World — Machine learning sample built with ML.NET |
 | hello_signalr | Hello World — Real-time web app built with ASP.NET Core SignalR |
 | helloworld | Hello World — Minimal C# setup |
