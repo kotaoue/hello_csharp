@@ -7,5 +7,8 @@
     <Nullable>enable</Nullable>
     <UserSecretsId>294e4d53-f8cd-4a46-8ae6-adae947446ee</UserSecretsId>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="13.6.5" />
+  </ItemGroup>
 
 </Project>
